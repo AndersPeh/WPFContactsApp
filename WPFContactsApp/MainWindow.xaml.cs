@@ -17,9 +17,13 @@ namespace WPFContactsApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<Contact> contacts;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            contacts = new List<Contact>();
 
             ReadDatabase();
         }
@@ -44,8 +48,32 @@ namespace WPFContactsApp
 
                 // Without ToList, contacts will only be a table query.
                 // ToList converts the table query to a list of contact.
-                var contacts = connection.Table<Contact>().ToList();
+                contacts = connection
+                    .Table<Contact>()
+                    .OrderBy(connection => connection.Name)
+                    .ToList();
             }
+
+            if (contacts != null)
+            {
+                // For each contact, contactsListView has a ListViewItem that sets its content to the Contact instance.
+                // As the content is not an UI element, WPF converts each Contact instance to text using ToString,
+                // so the ToString method of Contact.cs is called.
+                contactsListView.ItemsSource = contacts;
+            }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // searchTextBox will be assigned to whatever the user enters in the TextBox UI.
+            TextBox searchTextBox = sender as TextBox;
+
+            // Filter the contacts to those that contain what the user enters.
+            var filteredList = contacts
+                .Where(contact => contact.Name.ToLower().Contains(searchTextBox.Text.ToLower()))
+                .ToList();
+
+            contactsListView.ItemsSource = filteredList;
         }
     }
 }
