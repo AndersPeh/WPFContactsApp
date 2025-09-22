@@ -18,9 +18,9 @@ namespace WPFContactsApp
     /// <summary>
     /// Interaction logic for NewContactWindow.xaml
     /// </summary>
-    public partial class NewContactWindow : Window
+    public partial class NewContactDetailsWindow : Window
     {
-        public NewContactWindow()
+        public NewContactDetailsWindow()
         {
             InitializeComponent();
         }

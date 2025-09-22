@@ -30,7 +30,7 @@ namespace WPFContactsApp
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            NewContactWindow newContactWindow = new NewContactWindow();
+            NewContactDetailsWindow newContactWindow = new NewContactDetailsWindow();
             // ShowDialog forbids user from interacting with the main window unless the newContactWindow is closed.
             // Show allows user to interacting with the main window when the newContactWindow is opened.
             newContactWindow.ShowDialog();
@@ -74,6 +74,22 @@ namespace WPFContactsApp
                 .ToList();
 
             contactsListView.ItemsSource = filteredList;
+        }
+
+        private void contactsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Contact selectedContact = contactsListView.SelectedItem as Contact;
+
+            if (selectedContact != null)
+            {
+                ContactDetailsWindow contactDetailsWindow = new ContactDetailsWindow(
+                    selectedContact
+                );
+
+                contactDetailsWindow.ShowDialog();
+
+                ReadDatabase();
+            }
         }
     }
 }
