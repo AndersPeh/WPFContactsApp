@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using SQLite;
 using WPFContactsApp.Classes;
 
 namespace WPFContactsApp
@@ -34,19 +33,15 @@ namespace WPFContactsApp
                 Email = emailTextBox.Text,
                 Phone = phoneTextBox.Text,
             };
-            string databaseName = "Contacts.db";
-            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string databasePath = System.IO.Path.Combine(folderPath, databaseName);
 
             // using disposes SQLiteConnection after the execution leaves the block of code in {}.
             // After connection.Insert(contact), SQLiteConnection will be disposed.
-            using (SQLiteConnection connection = new SQLiteConnection(databasePath))
+            using (SQLite.SQLiteConnection connection = new(App.databasePath))
             {
-                // This will be ignored if the table has been created.
-                connection.CreateTable<Contact>();
-
                 // SQLiteConnection will detect contact belongs to Contact table automatically and insert contact to Contact table.
                 connection.Insert(contact);
+
+                // using will close the connection automatically after this block ends.
             }
 
             Close();
